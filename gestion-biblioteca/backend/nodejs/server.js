@@ -1,42 +1,39 @@
 const express = require('express');
-const cors = require('cors');
-const bodyParser = require('body-parser');
-const { connectDB } = require('./config/db');
+const dotenv = require('dotenv');
 const usuarioRoutes = require('./routes/usuarioRoutes');
+const pool = require('./config/db');
 const path = require('path');
-const Libros = require('./models/Libros');
-const Prestamo = require('./models/Prestamo');
 
-
+dotenv.config();
 
 const app = express();
-app.use(cors());
-app.use(bodyParser.json());
 
-// Conexión a la base de datos
-connectDB();
+// Middleware para parsear JSON
+app.use(express.json());
+
+// Rutas
+app.use('/api/usuarios', usuarioRoutes);
 
 // Servir archivos estáticos desde la carpeta "public"
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, '/public')));
 
-// Configurar EJS como motor de plantillas
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
-
-// Ruta para la página principal
-app.get('/', async (req, res) => {
-  try {
-      // Obtener todos los usuarios desde la base de datos
-      const usuarios = await Usuario.findAll();
-      // Pasar la variable "usuarios" a la vista
-      res.render('index', { usuarios });
-  } catch (error) {
-      console.error('Error al obtener los usuarios:', error);
-      res.status(500).send('Error al obtener los usuarios');
-  }
+// Manejar la ruta raíz ("/") para cargar el archivo index.html
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '/public/index.html'));
 });
 
-// Iniciar el servidor
-app.listen(3000, () => {
-  console.log('Servidor de Node.js corriendo en puerto 3000');
+// Probar la conexión a la base de datos al iniciar el servidor
+pool.connect((err, client, release) => {
+    if (err) {
+        console.error('Error al conectar a la base de datos:', err.stack);
+        process.exit(1); // Detiene la aplicación si hay un error de conexión
+    }
+    console.log('Conexión exitosa a la base de datos PostgreSQL');
+    release(); // Libera el cliente de la conexión
+});
+
+// Puerto del servidor
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
