@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Biblioteca</title>
+    <!-- Bootstrap CSS local -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Gestión de Biblioteca</h1>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Correo</th>
+                    <th>Teléfono</th>
+                    <th>Rol</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Aquí puedes iterar sobre los usuarios -->
+                <% if (usuarios && usuarios.length > 0) { %>
+                    <% usuarios.forEach(usuario => { %>
+                        <tr>
+                            <td><%= usuario.id %></td>
+                            <td><%= usuario.nombre %></td>
+                            <td><%= usuario.correo %></td>
+                            <td><%= usuario.telefono %></td>
+                            <td><%= usuario.rol %></td>
+                        </tr>
+                    <% }) %>
+                <% } else { %>
+                    <tr>
+                        <td colspan="5" class="text-center">No hay usuarios registrados</td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Bootstrap JS local -->
+    <script src="/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
