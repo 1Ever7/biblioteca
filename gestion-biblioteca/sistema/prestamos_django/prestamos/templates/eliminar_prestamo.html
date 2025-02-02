@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Eliminar Préstamo</h1>
+<p>¿Estás seguro de eliminar el préstamo "{{ object }}"?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Eliminar</button>
+    <a href="{% url 'prestamo-list' %}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}
