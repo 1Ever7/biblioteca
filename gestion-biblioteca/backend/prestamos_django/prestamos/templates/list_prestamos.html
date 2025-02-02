@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}Lista de Préstamos{% endblock %}
+
+{% block content %}
+<h1>Lista de Préstamos</h1>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Usuario</th>
+            <th>Libro</th>
+            <th>Fecha Préstamo</th>
+            <th>Fecha Devolución</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for prestamo in prestamos %}
+        <tr>
+            <td>{{ prestamo.id }}</td>
+            <td>{{ prestamo.nombre_usuario }}</td>
+            <td>{{ prestamo.titulo_libro }}</td>
+            <td>{{ prestamo.fecha_prestamo }}</td>
+            <td>{{ prestamo.fecha_devolucion|default:"No devuelto" }}</td>
+            <td>{{ prestamo.estado }}</td>
+            <td>
+                <a href="{% url 'prestamo-update' prestamo.id %}" class="btn btn-warning btn-sm">Editar</a>
+                <form action="{% url 'prestamo-delete' prestamo.id %}" method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro?')">Eliminar</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<a href="{% url 'prestamo-create' %}" class="btn btn-primary">Crear Préstamo</a>
+{% endblock %}
